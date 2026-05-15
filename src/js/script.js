@@ -1043,3 +1043,80 @@ function addDynamicFeatureCard() {
   // Observa para reveal animation
   revealObserver.observe(card);
 }
+/* ============================================================
+   22. SETINTERVAL — animação periódica nos valores do phone
+   ============================================================ */
+/** Atualiza os valores de ajuste do phone a cada 3 segundos simulando IA ativa */
+setInterval(() => {
+  // Valores simulados para dar sensação de IA em tempo real
+  const exps   = ['+0.8 EV', '+1.2 EV', '+1.6 EV', '+2.0 EV', '+0.4 EV'];
+  const focos  = ['Auto', 'Rosto', 'Objeto', '∞', 'Macro'];
+  const stabs  = ['ON', 'MAX', 'ON', 'OIS+'];
+  const hdrs   = ['Auto', 'Smart', 'Night', 'OFF', 'Smart'];
+
+  const adjExp  = $('#adjExp');
+  const adjFoc  = $('#adjFoc');
+  const adjStab = $('#adjStab');
+  const adjHdr  = $('#adjHdr');
+
+  // Só atualiza se o modal de login não estiver aberto
+  if (loginModal && loginModal.classList.contains('open')) return;
+
+  const rand = arr => arr[Math.floor(Math.random() * arr.length)];
+
+  // Efeito de flash no valor ao mudar
+  function flashUpdate(el, newVal) {
+    if (!el) return;
+    el.style.color = 'var(--green)';
+    el.textContent = newVal;
+    setTimeout(() => { el.style.color = ''; }, 400);
+  }
+
+  // Só altera alguns valores aleatoriamente para parecer dinâmico
+  if (Math.random() > 0.5 && adjExp)  flashUpdate(adjExp,  rand(exps));
+  if (Math.random() > 0.7 && adjFoc)  flashUpdate(adjFoc,  rand(focos));
+  if (Math.random() > 0.8 && adjStab) flashUpdate(adjStab, rand(stabs));
+  if (Math.random() > 0.6 && adjHdr)  flashUpdate(adjHdr,  rand(hdrs));
+
+}, 2800);
+
+/* ============================================================
+   23. MANIPULAÇÃO DE STRINGS — utilitários
+   ============================================================ */
+/**
+ * Formata número com sufixo (ex: 50000000 → "50M+")
+ * @param {number} num
+ * @returns {string}
+ */
+function formatNumber(num) {
+  if (num >= 1_000_000) return (num / 1_000_000).toFixed(0) + 'M+';
+  if (num >= 1_000)     return (num / 1_000).toFixed(0) + 'K+';
+  return String(num);
+}
+
+/**
+ * Trunca texto com reticências.
+ * @param {string} text
+ * @param {number} maxLen
+ * @returns {string}
+ */
+function truncateText(text, maxLen = 120) {
+  if (text.length <= maxLen) return text;
+  return text.slice(0, maxLen).trimEnd() + '...';
+}
+
+/* ============================================================
+   24. PARALLAX LEVE no hero bg glow (CSS-driven via JS)
+   ============================================================ */
+const heroBg = $('.hero-bg-glow');
+if (heroBg) {
+  window.addEventListener('mousemove', (e) => {
+    const x = (e.clientX / window.innerWidth  - 0.5) * 20;
+    const y = (e.clientY / window.innerHeight - 0.5) * 10;
+    heroBg.style.transform = `translate(${x}px, ${y}px)`;
+  }, { passive: true });
+}
+
+/* ============================================================
+   END OF SCRIPT
+   ============================================================ */
