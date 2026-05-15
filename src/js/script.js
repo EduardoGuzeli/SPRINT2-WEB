@@ -567,3 +567,179 @@ document.addEventListener('keyup', (e) => {
     closeModal();
   }
 });
+
+/* ============================================================
+   10. VALIDAÇÃO DO LOGIN SIMULADO
+   ============================================================ */
+// Usuários válidos (simulado)
+const VALID_USERS = [
+  { user: 'jovi',      pass: 'smartcam' },
+  { user: 'admin',     pass: '1234'     },
+  { user: 'smartcam',  pass: 'jovi2026' },
+];
+
+/**
+ * Exibe mensagem de erro em um campo do formulário.
+ * @param {HTMLInputElement} input
+ * @param {HTMLElement} errEl
+ * @param {string} msg
+ */
+function setFieldError(input, errEl, msg) {
+  input.classList.add('error');
+  if (errEl) errEl.textContent = msg;
+}
+
+/**
+ * Limpa mensagem de erro de um campo.
+ * @param {HTMLInputElement} input
+ * @param {HTMLElement} errEl
+ */
+function clearFieldError(input, errEl) {
+  input.classList.remove('error');
+  if (errEl) errEl.textContent = '';
+}
+
+if (loginForm) {
+  loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const userVal = loginUser.value.trim();
+    const passVal = loginPass.value.trim();
+    let valid     = true;
+
+    const userErr = $('#loginUserErr');
+    const passErr = $('#loginPassErr');
+
+    // Limpa erros anteriores
+    clearFieldError(loginUser, userErr);
+    clearFieldError(loginPass, passErr);
+
+    // Valida campo usuário
+    if (!userVal) {
+      setFieldError(loginUser, userErr, 'Informe seu usuário ou e-mail.');
+      valid = false;
+    }
+
+    // Valida campo senha
+    if (!passVal) {
+      setFieldError(loginPass, passErr, 'Informe sua senha.');
+      valid = false;
+    }
+
+    if (!valid) return;
+
+    // Verifica credenciais
+    const match = VALID_USERS.find(
+      u => u.user === userVal && u.pass === passVal
+    );
+
+    if (match) {
+      closeModal();
+      // ✅ Requisito: alert()
+      setTimeout(() => {
+        alert(`✅ Bem-vindo ao SmartCam AI, ${userVal}!\n\nVocê está conectado com sucesso.\nExplore todos os recursos exclusivos JOVI.`);
+      }, 300);
+    } else {
+      setFieldError(loginPass, passErr, 'Usuário ou senha incorretos. Tente: jovi / smartcam');
+      loginPass.value = '';
+      loginPass.focus();
+    }
+  });
+}
+
+// Limpa erro ao digitar no campo de login
+if (loginUser) {
+  loginUser.addEventListener('keyup', () => {
+    clearFieldError(loginUser, $('#loginUserErr'));
+  });
+}
+if (loginPass) {
+  loginPass.addEventListener('keyup', () => {
+    clearFieldError(loginPass, $('#loginPassErr'));
+  });
+}
+
+/* ============================================================
+   11. VALIDAÇÃO DO FORMULÁRIO DE CONTATO
+   ============================================================ */
+/**
+ * Valida e-mail com regex.
+ * @param {string} email
+ * @returns {boolean}
+ */
+function isValidEmail(email) {
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return re.test(email);
+}
+
+// Contador de caracteres da mensagem
+if (contactMsg) {
+  contactMsg.addEventListener('keyup', () => {
+    const len = contactMsg.value.length;
+    charCount.textContent = `${len} / 20 caracteres mínimos`;
+    charCount.style.color = len >= 20 ? 'var(--green)' : 'var(--text-dim)';
+  });
+}
+
+if (contactForm) {
+  contactForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const nameEl  = $('#contactName');
+    const emailEl = $('#contactEmail');
+    const nameErr  = $('#nameErr');
+    const emailErr = $('#emailErr');
+    const msgErr   = $('#msgErr');
+
+    const nameVal  = nameEl.value.trim();
+    const emailVal = emailEl.value.trim();
+    const msgVal   = contactMsg.value.trim();
+
+    let valid = true;
+
+    // Limpa erros
+    [nameEl, emailEl, contactMsg].forEach(el => el.classList.remove('error'));
+    [nameErr, emailErr, msgErr].forEach(el => { if(el) el.textContent = ''; });
+    formSuccess.classList.remove('show');
+
+    // Valida nome
+    if (!nameVal || nameVal.length < 3) {
+      setFieldError(nameEl, nameErr, 'Informe seu nome completo (mínimo 3 caracteres).');
+      valid = false;
+    }
+
+    // Valida e-mail
+    if (!emailVal) {
+      setFieldError(emailEl, emailErr, 'Informe seu e-mail.');
+      valid = false;
+    } else if (!isValidEmail(emailVal)) {
+      setFieldError(emailEl, emailErr, 'Informe um e-mail válido (ex: nome@dominio.com).');
+      valid = false;
+    }
+
+    // Valida mensagem
+    if (!msgVal || msgVal.length < 20) {
+      setFieldError(contactMsg, msgErr, `Mensagem muito curta. Mínimo 20 caracteres (atual: ${msgVal.length}).`);
+      valid = false;
+    }
+
+    if (!valid) return;
+
+    // Sucesso — simula envio
+    const submitBtn = contactForm.querySelector('button[type="submit"]');
+    submitBtn.textContent = '⏳ Enviando...';
+    submitBtn.disabled    = true;
+
+    setTimeout(() => {
+      submitBtn.textContent = '✉️ Enviar mensagem';
+      submitBtn.disabled    = false;
+      formSuccess.classList.add('show');
+      contactForm.reset();
+      charCount.textContent = '0 / 20 caracteres mínimos';
+      charCount.style.color  = '';
+
+      // ✅ Requisito: alert()
+      alert(`✅ Mensagem enviada com sucesso!\n\nOlá, ${nameVal}!\nReceberemos sua mensagem em breve e retornaremos para: ${emailVal}`);
+    }, 1600);
+  });
+}
