@@ -743,3 +743,303 @@ if (contactForm) {
     }, 1600);
   });
 }
+
+/* ============================================================
+   12. RUSH MODE — alert(), confirm(), prompt()
+   ============================================================ */
+let rushModeActive = false;
+
+if (rushActivateBtn) {
+  rushActivateBtn.addEventListener('click', () => {
+    // ✅ Requisito: confirm()
+    const confirmado = confirm(
+      '⚡ MODO CORRERIA\n\n' +
+      'Ao ativar o Modo Correria:\n' +
+      '• A câmera abre em 0.3 segundos\n' +
+      '• Rajada automática de 8fps\n' +
+      '• IA seleciona a melhor foto\n' +
+      '• Interface limpa sem notificações\n\n' +
+      'Deseja ativar o Modo Correria agora?'
+    );
+
+    if (!confirmado) return;
+
+    // ✅ Requisito: prompt()
+    const userName = prompt(
+      '📸 SmartCam AI — Modo Correria\n\nDigite seu nome para personalizar a experiência:',
+      'Usuário JOVI'
+    );
+
+    // Usuário cancelou o prompt
+    if (userName === null) return;
+
+    const nome = (userName || 'Usuário').trim() || 'Usuário';
+
+    rushModeActive = true;
+    activateRushMode(nome);
+  });
+}
+
+/**
+ * Ativa visualmente o Modo Correria.
+ * Altera textos, estilos e exibe confirmação.
+ * @param {string} nome - nome do usuário
+ */
+function activateRushMode(nome) {
+  // Efeito visual no botão
+  rushActivateBtn.textContent = '⚡ CORRERIA ATIVO!';
+  rushActivateBtn.classList.remove('btn-orange');
+  rushActivateBtn.classList.add('btn-primary');
+  rushActivateBtn.style.animation = 'none';
+
+  // Adiciona classe de pulsação no círculo
+  if (rushCircle) {
+    rushCircle.style.transform  = 'scale(1.08)';
+    rushCircle.style.boxShadow  = '0 0 100px rgba(255,107,26,0.7), 0 0 200px rgba(255,107,26,0.3)';
+  }
+
+  // Altera o ajuste do phone para Rush
+  updatePhoneAdjustments(PHONE_ADJUSTMENTS.rush);
+
+  // Vai para o slide do Modo Correria (índice 3)
+  goToSlide(3);
+  pauseSlideshow();
+
+  // ✅ Requisito: alert()
+  setTimeout(() => {
+    alert(
+      `⚡ MODO CORRERIA ATIVADO!\n\n` +
+      `Preparado, ${nome}!\n\n` +
+      `📸 Câmera pronta em: 0.3s\n` +
+      `📷 Modo rajada: 8fps\n` +
+      `🎯 IA selecionando melhores fotos...\n\n` +
+      `SmartCam AI — tecnologia exclusiva JOVI.`
+    );
+
+    // Restaura o botão após fechar o alert
+    rushActivateBtn.textContent = '⚡ Ativar Modo Correria';
+    rushActivateBtn.classList.remove('btn-primary');
+    rushActivateBtn.classList.add('btn-orange');
+
+    if (rushCircle) {
+      rushCircle.style.transform = '';
+      rushCircle.style.boxShadow = '';
+    }
+
+    rushModeActive = false;
+    startSlideshow(); // retoma o slideshow
+  }, 300);
+}
+
+// Clique no círculo do Rush também ativa
+if (rushCircle) {
+  rushCircle.addEventListener('click', () => {
+    if (rushActivateBtn) rushActivateBtn.click();
+  });
+}
+
+/* ============================================================
+   13. FEATURE CARDS — interação com mouseover/mouseout
+   ============================================================ */
+$$('.feature-card').forEach(card => {
+  // Mouseover — exibe info extra dinamicamente no card
+  card.addEventListener('mouseover', () => {
+    card.style.cursor = 'pointer';
+  });
+
+  // Click — exibe detalhes em um mini tooltip ou prompt
+  card.addEventListener('click', () => {
+    const title = card.querySelector('.fc-title')?.textContent || 'Recurso';
+    const desc  = card.querySelector('.fc-desc')?.textContent  || '';
+
+    // Manipulação dinâmica de classe
+    card.classList.add('card-clicked');
+    setTimeout(() => card.classList.remove('card-clicked'), 600);
+  });
+});
+
+/* ============================================================
+   14. SMOOTH SCROLL para links de navegação
+   ============================================================ */
+$$('a[href^="#"]').forEach(link => {
+  link.addEventListener('click', (e) => {
+    const href   = link.getAttribute('href');
+    if (href === '#') return;
+
+    const target = $(href);
+    if (!target) return;
+
+    e.preventDefault();
+
+    const navbarHeight = navbar ? navbar.offsetHeight : 68;
+    const targetTop    = target.getBoundingClientRect().top + window.pageYOffset - navbarHeight - 10;
+
+    window.scrollTo({ top: targetTop, behavior: 'smooth' });
+  });
+});
+
+/* ============================================================
+   15. SCROLL TO TOP BUTTON
+   ============================================================ */
+if (scrollTopBtn) {
+  scrollTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
+
+/* ============================================================
+   16. MANIPULAÇÃO DINÂMICA DA NAVBAR — active link on click
+   ============================================================ */
+$$('.nav-link').forEach(link => {
+  link.addEventListener('click', () => {
+    $$('.nav-link').forEach(l => l.classList.remove('active'));
+    link.classList.add('active');
+  });
+});
+
+/* ============================================================
+   17. PROMPT DE BOAS-VINDAS — ao carregar a página
+   ============================================================ */
+/**
+ * Exibe prompt de boas-vindas na primeira visita (salvo em sessionStorage).
+ * Demonstra uso de prompt() e manipulação de string.
+ */
+function showWelcomePrompt() {
+  // Evita mostrar toda vez que o usuário recarregar
+  if (sessionStorage.getItem('smartcam_welcomed')) return;
+
+  setTimeout(() => {
+    // ✅ Requisito: prompt()
+    const nome = prompt(
+      '👋 Bem-vindo ao SmartCam AI!\n\n' +
+      'A câmera inteligente exclusiva dos dispositivos JOVI.\n\n' +
+      'Como podemos te chamar?'
+    );
+
+    if (nome !== null && nome.trim() !== '') {
+      const nomeFinal = nome.trim();
+
+      // Manipulação de string: capitaliza o nome
+      const nomeCapitalizado = nomeFinal.charAt(0).toUpperCase() + nomeFinal.slice(1).toLowerCase();
+
+      // ✅ Requisito: alert()
+      alert(
+        `Olá, ${nomeCapitalizado}! 🎉\n\n` +
+        `Seja bem-vindo ao SmartCam AI.\n` +
+        `Explore os modos de câmera inteligente,\n` +
+        `veja como a IA trabalha por você e\n` +
+        `descubra os dispositivos JOVI compatíveis.`
+      );
+
+      // Altera o texto do hero dinamicamente (manipulação de DOM)
+      const heroDesc = $('.hero-desc');
+      if (heroDesc) {
+        heroDesc.innerHTML = heroDesc.innerHTML.replace(
+          'Exclusiva para dispositivos JOVI.',
+          `Exclusiva para dispositivos JOVI. Bem-vindo, <strong style="color:var(--cyan)">${nomeCapitalizado}</strong>!`
+        );
+      }
+    }
+
+    sessionStorage.setItem('smartcam_welcomed', '1');
+  }, 1500);
+}
+
+/* ============================================================
+   18. MANIPULAÇÃO DINÂMICA DO DOM — Feature highlight
+   ============================================================ */
+/**
+ * Adiciona um badge "NOVO" dinamicamente aos cards de feature.
+ * Demonstra createElement, appendChild, classList.
+ */
+function addNewBadgesToFeatures() {
+  const newFeatures = ['captura', 'offline']; // data-feature dos cards
+
+  newFeatures.forEach(feat => {
+    const card = $(`.feature-card[data-feature="${feat}"]`);
+    if (!card) return;
+
+    // Cria o badge dinamicamente
+    const badge = document.createElement('span');
+    badge.className   = 'badge badge-green';
+    badge.textContent = '🆕 NOVO';
+    badge.style.cssText = `
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      font-size: 0.62rem;
+      padding: 3px 9px;
+      animation: pulse 2s ease-in-out infinite;
+    `;
+
+    // card já tem position:relative via CSS
+    card.appendChild(badge);
+  });
+}
+
+/* ============================================================
+   19. SCROLL LISTENER — registra todos os handlers
+   ============================================================ */
+window.addEventListener('scroll', handleNavbarScroll, { passive: true });
+
+/* ============================================================
+   20. INICIALIZAÇÃO — DOMContentLoaded
+   ============================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+  // Inicia reveal observer
+  initRevealObserver();
+
+  // Inicia contadores
+  initCounters();
+
+  // Inicia slideshow automático
+  startSlideshow();
+
+  // Define cena inicial (retrato)
+  updateSceneMode('retrato');
+
+  // Adiciona badges de "NOVO" dinamicamente
+  addNewBadgesToFeatures();
+
+  // Welcome prompt
+  showWelcomePrompt();
+
+  // Adiciona nova feature dinamicamente ao grid de features
+  addDynamicFeatureCard();
+
+  console.log('%c🚀 SmartCam AI — JOVI Challenge 2026 inicializado!', 'color:#00c8ff;font-weight:bold;font-size:14px;');
+  console.log('%c📸 Sprint 2 Web Development — Todos os requisitos implementados.', 'color:#00e5a0;font-size:12px;');
+});
+
+/* ============================================================
+   21. CREATEELEMENT — adiciona card dinamicamente ao DOM
+   ============================================================ */
+/**
+ * Cria e insere um card de feature dinamicamente no DOM.
+ * Demonstra createElement, innerHTML, appendChild.
+ */
+function addDynamicFeatureCard() {
+  const grid = $('#featuresGrid');
+  if (!grid) return;
+
+  // Cria o elemento card
+  const card = document.createElement('article');
+  card.className       = 'feature-card fc-orange reveal delay-4';
+  card.dataset.feature = 'ai-photo';
+
+  // Define o conteúdo via innerHTML
+  card.innerHTML = `
+    <div class="fc-icon fc-icon-orange">🎨</div>
+    <h3 class="fc-title">IA Photo Enhance</h3>
+    <p class="fc-desc">
+      Melhoria automática pós-captura com IA: correção de cores, remoção de ruído,
+      nitidez seletiva e otimização de HDR aplicados localmente em milissegundos.
+    </p>
+  `;
+
+  // Adiciona ao grid
+  grid.appendChild(card);
+
+  // Observa para reveal animation
+  revealObserver.observe(card);
+}
