@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="SmartCam AI — A câmera inteligente da JOVI que pensa por você. IA em tempo real, detecção de cena, ajuste automático." />
+  <title>SmartCam AI — JOVI</title>
+  <link rel="stylesheet" href="./src/css/estilo.css" />
+</head>
+<body>
+    
+    <!-- ========== MODAL DE LOGIN ========== -->
+  <div id="loginModal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Login SmartCam AI">
+    <div class="modal-box">
+      <button class="modal-close" id="modalClose" aria-label="Fechar login">✕</button>
+      <div class="modal-logo">
+        <div class="modal-logo-icon">📷</div>
+        <div>
+          <p class="modal-logo-title">SmartCam <span>AI</span></p>
+          <p class="modal-logo-sub">by JOVI</p>
+        </div>
+      </div>
+      <h2 class="modal-title">Entrar na plataforma</h2>
+      <p class="modal-desc">Acesse o painel SmartCam AI para explorar todas as funcionalidades.</p>
+      <form id="loginForm" novalidate>
+        <div class="form-group">
+          <label for="loginUser">Usuário</label>
+          <input type="text" id="loginUser" placeholder="Seu usuário ou e-mail" autocomplete="username" />
+          <span class="input-err" id="loginUserErr"></span>
+        </div>
+        <div class="form-group">
+          <label for="loginPass">Senha</label>
+          <input type="password" id="loginPass" placeholder="Sua senha" autocomplete="current-password" />
+          <span class="input-err" id="loginPassErr"></span>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full">Entrar</button>
+      </form>
+      <p class="modal-hint">Demo: usuário <strong>jovi</strong> / senha <strong>smartcam</strong></p>
+    </div>
+  </div>
+ 
+  <!-- ========== NAVBAR ========== -->
+  <header class="navbar" id="navbar" role="banner">
+    <div class="navbar-brand">
+      <div class="navbar-logo">📷</div>
+      <div>
+        <p class="navbar-title">SmartCam <span>AI</span></p>
+        <p class="navbar-subtitle">by JOVI</p>
+      </div>
+    </div>
+ 
+    <nav class="navbar-nav" aria-label="Navegação principal">
+      <a href="#recursos" class="nav-link">Recursos</a>
+      <a href="#modos" class="nav-link">Modos de Cena</a>
+      <a href="#como-funciona" class="nav-link">Como Funciona</a>
+      <a href="#rush" class="nav-link">Modo Correria</a>
+      <a href="#contato" class="nav-link">Contato</a>
+    </nav>
+ 
+    <div class="navbar-actions">
+      <button class="btn btn-primary" id="openLoginBtn">Dispositivos JOVI</button>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+ 
+    
+</body>
+</html>
