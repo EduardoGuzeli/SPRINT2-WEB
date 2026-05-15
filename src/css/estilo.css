@@ -1259,3 +1259,42 @@ h3 { font-size: 1.08rem; }
 }
 .scroll-top.show { opacity: 1; pointer-events: all; transform: translateY(0); }
 .scroll-top:hover { transform: translateY(-3px); }
+
+
+/* ========================
+   RESPONSIVE
+   ======================== */
+@media (max-width: 1024px) {
+  .hero-grid  { flex-direction: column; text-align: center; gap: 40px; }
+  .hero-desc, .hero-badges, .hero-actions, .hero-stats { margin-left: auto; margin-right: auto; }
+  .hero-badges, .hero-actions, .hero-stats { justify-content: center; }
+  .hero-visual { flex: none; width: 100%; }
+  .chip-focus, .chip-moment { display: none; }
+  .rush-grid  { flex-direction: column; align-items: center; text-align: center; gap: 40px; }
+  .rush-desc  { margin: 0 auto 32px; }
+  .rush-features { justify-content: center; }
+  .scene-content { flex-direction: column; gap: 32px; }
+  .scene-visual { flex: none; width: 100%; max-width: 300px; margin: 0 auto; }
+  .contact-grid { flex-direction: column; }
+  .contact-form-wrap { flex: none; width: 100%; }
+}
+@media (max-width: 768px) {
+  :root { --section-py: 64px; }
+  .navbar { padding: 0 18px; }
+  .navbar-nav { display: none; }
+  .hamburger { display: flex; }
+  .step-connector { display: none; }
+  .steps-container { gap: 32px; }
+  .timing-banner { padding: 22px 18px; }
+  .timing-row { gap: 24px; }
+  .timing-divider { display: none; }
+  .footer-grid { gap: 28px; }
+  .footer-brand { flex: 0 0 100%; }
+}
+@media (max-width: 480px) {
+  h1 { font-size: 2.2rem; }
+  h2 { font-size: 1.65rem; }
+  .stat-card-value { font-size: 1.9rem; }
+  .problem-grid, .features-grid, .testimonials-grid { flex-direction: column; }
+  .navbar-actions .btn { display: none; }
+}
